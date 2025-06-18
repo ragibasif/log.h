@@ -22,6 +22,7 @@ extern "C" {
 #include <assert.h> // assert
 #include <ctype.h>
 #include <limits.h>  // INT_MAX, INT_MIN
+#include <pthread.h> // pthread, mutex
 #include <stdarg.h>  // va_args, va_end, va_start, va_list
 #include <stdbool.h> // bool, true, false
 #include <stddef.h>
@@ -40,12 +41,13 @@ enum log_level {
     FATAL = 5
 };
 
-void log_start(const char *file);
-void log_end();
+extern void log_start(const char *file);
+extern void log_end();
 
-void set_log_level(enum log_level level);
-void log_message(enum log_level level, const char *file, unsigned int line,
-                 const char *function, const char *format, ...);
+extern void set_log_level(enum log_level level);
+extern void log_message(enum log_level level, const char *file,
+                        unsigned int line, const char *function,
+                        const char *format, ...);
 
 #define INFO(format, ...)                                                      \
     log_message(INFO, __FILE__, __LINE__, __func__, format, ##__VA_ARGS__)

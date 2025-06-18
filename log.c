@@ -13,38 +13,49 @@
  */
 
 #include "log.h"
-// #include "libs/aec.h"
 
+static pthread_mutex_t log_mutex = PTHREAD_MUTEX_INITIALIZER;
 static FILE *log_file = NULL;
-
 static enum log_level current_log_level = INFO;
 
 void log_start(const char *file) {
+    pthread_mutex_lock(&log_mutex);
     if (file) {
         log_file = fopen(file, "a");
         if (!log_file) {
             fprintf(stderr, "Failed to open log file: %s\n", file);
+            pthread_mutex_unlock(&log_mutex);
             exit(EXIT_FAILURE);
         }
     } else {
         log_file = stdout; // default to standard output
     }
+    pthread_mutex_unlock(&log_mutex);
 }
 
 void log_end(void) {
+    pthread_mutex_lock(&log_mutex);
     if (log_file && log_file != stdout) {
         fclose(log_file);
         log_file = NULL;
     }
+    pthread_mutex_unlock(&log_mutex);
 }
 
-void set_log_level(enum log_level level) { current_log_level = level; }
+void set_log_level(enum log_level level) {
+    pthread_mutex_lock(&log_mutex);
+    current_log_level = level;
+    pthread_mutex_unlock(&log_mutex);
+}
 
 void log_message(enum log_level level, const char *file, unsigned int line,
                  const char *function, const char *format, ...) {
 
+    pthread_mutex_lock(&log_mutex);
+
     if (!log_file) {
         fprintf(stderr, "Logging not initialized.\n");
+        pthread_mutex_unlock(&log_mutex);
         return;
     }
     time_t now;
@@ -66,6 +77,6 @@ void log_message(enum log_level level, const char *file, unsigned int line,
     va_end(args);
 
     fprintf(log_file, "\n");
-
-    fflush(log_file); // write the message immediately
+    fflush(log_file);
+    pthread_mutex_unlock(&log_mutex);
 }

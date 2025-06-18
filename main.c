@@ -13,17 +13,16 @@
  */
 
 #include "log.h"
-#include "third_party/internal_debug.h"
 
 int main(int argc, char **argv) {
     (void)argc;
     (void)argv;
 
-    log_start("app.log");
+    log_start(NULL);
 
-    DEBUG("HEllo");
+    INFO("Hello, World!");
+
     log_end();
 
-    forge_run();
     return 0;
 }

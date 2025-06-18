@@ -1,5 +1,20 @@
 # log.h
 
+Logging library implemented in C programming language for **educational and
+recreational purposes.**
+
+## TO DO
+
+- External and Dynamic Configuration
+- Custom Log Formatting
+- Improve Error Handling
+- Refactor for Code consistency
+- Performance and Efficiency
+- Security Enhancement
+- Integrate with logging tools
+- Testing and Validation
+- Cross-platform logging
+
 ## Usage
 
 ### Installation
@@ -8,34 +23,24 @@ Clone the repository.
 
 ```shell
 git clone git@github.com:ragibasif/log.h.git
+cp log.h/log.h /path/to/your/project/include/
+cp log.h/log.c /path/to/your/project/src/
 ```
 
-Make sure you have `gcc` and/or `clang` and `make` installed.
+### Include in you program
 
-### Build the project
+```c
+#include "log.h"
+```
+
+### Build the program
+
+The library uses `pthread.h` to ensure thread safety. Thus, `-pthread` must be
+passed to the linker.
 
 ```shell
-make
+gcc -pthread -o app main.c log.c
 ```
-
-### Run the executable
-
-```shell
-make run
-```
-
-### Clean build files
-
-```shell
-make clean
-```
-
-## Dependencies
-
-This project uses:
-
-- C Programming Language
-- GNU Make
 
 ## Contributing
 
